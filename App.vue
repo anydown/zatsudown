@@ -12,6 +12,7 @@ const md = new MarkdownIt();
 const initial = `次に空行が来ると見出しになる
 
 句読点で終わると段落になる。
+改行も展開されるよ。
 
 連続する行は
 リストに
@@ -27,8 +28,8 @@ function compileListItem(line) {
 function compileParagraph(block) {
   return block
     .split("\n")
-    .map(l => `${l}  `)
-    .join("\n");
+    .join("  \n")
+    .trim();
 }
 function compileList(block) {
   return block
@@ -87,6 +88,12 @@ body {
 .whole {
   height: 100%;
   display: flex;
+}
+
+@media screen and (max-width: 800px) {
+  .whole {
+    flex-direction: column;
+  }
 }
 
 textarea {
