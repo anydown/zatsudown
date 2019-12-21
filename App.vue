@@ -21,50 +21,38 @@ const initial = `次に空行が来ると見出しになる
 
 `;
 
-function compile(input) {
-  const lines = input.split("\n");
-  const result = [];
+function compileParagraph(block) {
+  return block
+    .split("\n")
+    .map(l => `${l}  `)
+    .join("\n");
+}
+function compileList(block) {
+  return block
+    .split("\n")
+    .map(l => `- ${l}`)
+    .join("\n");
+}
+function compileHeading(block) {
+  return `# ${block}`;
+}
 
-  let withinList = false;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    //末尾句読点は問答無用で段落化
-    if (line.match("。$")) {
-      result.push(`\n${line}\n`);
-      continue;
-    }
-
-    if (line.trim().length === 0) {
-      result.push("");
-      withinList = false;
-      continue;
-    }
-
-    let nextLine = null;
-    if (i + 1 < lines.length) {
-      nextLine = lines[i + 1];
-    }
-
-    //次の行が空行でなければリスト開始
-    if (nextLine && nextLine.length > 0) {
-      withinList = true;
-    }
-
-    if (withinList) {
-      result.push(`- ${line}`);
-
-      if (nextLine && nextLine.trim() === "") {
-        withinList = false;
-      }
-      continue;
-    }
-
-    if (line.trim().length > 0) {
-      result.push(`# ${line}`);
-    }
+function compileBlock(block) {
+  if (block.match("[。.]$")) {
+    return compileParagraph(block);
   }
-  return result.join("\n");
+  if (block.indexOf("\n") >= 0) {
+    return compileList(block);
+  }
+  return compileHeading(block);
+}
+
+function compile(input) {
+  const blocks = input.replace(/\n\n+/g, "\n\n").split("\n\n");
+  return blocks
+    .map(b => b.trim())
+    .map(compileBlock)
+    .join("\n\n");
 }
 
 export default {
@@ -85,27 +73,31 @@ export default {
 </script>
 
 <style lang="stylus">
-html, body{
+html, body {
   height: 100%;
 }
-body{
+
+body {
   margin: 0;
 }
-.whole{
+
+.whole {
   height: 100%;
   display: flex;
 }
-textarea{
+
+textarea {
   flex: 1;
   padding: 1em;
   font-size: 20px;
 }
 
-textarea.input{
+textarea.input {
   background: #333;
   color: white;
 }
-.output{
+
+.output {
   flex: 1;
   padding: 1em;
 }
