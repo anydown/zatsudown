@@ -17,7 +17,7 @@ const initial = `次に空行が来ると見出しになる
 連続する行は
 リストに
 なるよ
-　行頭全角スペースは入れ子リストになるよ
+　行頭全角スペースは入れ子になる
 
 そんな感じです`;
 
@@ -111,5 +111,6 @@ textarea.input {
 .output {
   flex: 1;
   padding: 1em;
+  overflow-y: scroll;
 }
 </style>
