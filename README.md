@@ -4,6 +4,8 @@
 
 https://twitter.com/hashedrock/status/1208370822466822144
 
+![zatsudown](https://user-images.githubusercontent.com/3132889/71309882-78269700-2450-11ea-825a-8274118f5bc2.gif)
+
 # 文法
 
 - 空行で区切られた文字列をブロックと認識
