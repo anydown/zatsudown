@@ -6,8 +6,8 @@
   </div>
 </template>
 <script>
-var MarkdownIt = require("markdown-it"),
-  md = new MarkdownIt();
+import MarkdownIt from "markdown-it";
+const md = new MarkdownIt();
 
 const initial = `次に空行が来ると見出しになる
 
@@ -17,9 +17,12 @@ const initial = `次に空行が来ると見出しになる
 リストに
 なるよ
 
-そんな感じです
+そんな感じです`;
 
-`;
+function compileListItem(line) {
+  const m = line.replace(/[\t　]/g, "  ").match(/^( *)(.*)/);
+  return `${m[1]}- ${m[2]}`;
+}
 
 function compileParagraph(block) {
   return block
@@ -30,7 +33,7 @@ function compileParagraph(block) {
 function compileList(block) {
   return block
     .split("\n")
-    .map(l => `- ${l}`)
+    .map(compileListItem)
     .join("\n");
 }
 function compileHeading(block) {
