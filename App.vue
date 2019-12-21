@@ -7,6 +7,8 @@
 </template>
 <script>
 import MarkdownIt from "markdown-it";
+import { compile } from "./compiler";
+
 const md = new MarkdownIt();
 
 const initial = `次に空行が来ると見出しになる
@@ -20,45 +22,6 @@ const initial = `次に空行が来ると見出しになる
 　行頭全角スペースは入れ子になる
 
 そんな感じです`;
-
-function compileListItem(line) {
-  const m = line.replace(/[\t　]/g, "  ").match(/^( *)(.*)/);
-  return `${m[1]}- ${m[2]}`;
-}
-
-function compileParagraph(block) {
-  return block
-    .split("\n")
-    .join("  \n")
-    .trim();
-}
-function compileList(block) {
-  return block
-    .split("\n")
-    .map(compileListItem)
-    .join("\n");
-}
-function compileHeading(block) {
-  return `# ${block}`;
-}
-
-function compileBlock(block) {
-  if (block.match("[。.]$")) {
-    return compileParagraph(block);
-  }
-  if (block.indexOf("\n") >= 0) {
-    return compileList(block);
-  }
-  return compileHeading(block);
-}
-
-function compile(input) {
-  const blocks = input.replace(/\n\n+/g, "\n\n").split("\n\n");
-  return blocks
-    .map(b => b.trim())
-    .map(compileBlock)
-    .join("\n\n");
-}
 
 export default {
   data() {
